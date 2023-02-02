@@ -4,7 +4,6 @@ bot = telebot.TeleBot("6026317343:AAEprQGw8IIfqJLrFiLnFwTfQi1bbycuNa4")
 
 global firstNum
 global secondNum
-global znak
 
 @bot.message_handler(commands=["start"])
 def button(message):
@@ -21,7 +20,7 @@ def controller(message):
         bot.send_message(message.chat.id,"Введи два числа через пробел")
         bot.register_next_step_handler(message,sentenceR)
     elif message.text == "Комплексные числа":
-        bot.send_message(message.chat.id,"Введи два комплексных числа через пробел")
+        bot.send_message(message.chat.id,"Введи два комплексных числа через пробел (пример ввода: 5+6j 2-3j) ")
         bot.register_next_step_handler(message,sentenceK)
 
 def sentenceR(message):
@@ -29,15 +28,21 @@ def sentenceR(message):
     numbers = message.text
     firstNum = int(numbers.split()[0])
     secondNum = int(numbers.split()[1])
-    bot.send_message(message.chat.id,f"Первое число - {firstNum}, Второе число - {secondNum}")
+    bot.send_message(message.chat.id,f"Первое число : {firstNum}, Второе число : {secondNum}")
     buttonMathR(message)
 
 def sentenceK(message):
     global firstNum, secondNum
     numbers = message.text
-    firstNum = int(numbers.split()[0])
-    secondNum = int(numbers.split()[1])
-    bot.send_message(message.chat.id,f"Первое число - {firstNum}, Второе число - {secondNum}")
+    firstNum = complex(numbers.split()[0])
+    secondNum = complex(numbers.split()[1])
+    bot.send_message(message.chat.id,f"Первое число : {firstNum}, Второе число : {secondNum}")
+    # a1 = int(firstNum.split("+", "-")[0])
+    # b1 = int(firstNum.split("+", "-")[1])
+    # a2 = int(secondNum.split("+", "-")[0])
+    # b2 = int(secondNum.split("+", "-")[1])
+    # bot.send_message(message.chat.id,f"Первое число : {a1}, Второе число : {b1}")
+    # bot.send_message(message.chat.id,f"Первое число : {a2}, Второе число : {b2}")
     buttonMathK(message)
 
 @bot.message_handler(commands = ["button"])
@@ -58,7 +63,6 @@ def buttonMathR(message):
     bot.send_message(message.chat.id,"Выбери ниже",reply_markup=markup)
     bot.register_next_step_handler(message,MathR)
 
-# @bot.message_handler(commands = ["button"])
 def MathR(message):
     global firstNum, secondNum, znak
     result = 0
@@ -99,6 +103,26 @@ def buttonMathK(message):
     markup.add(but3)
     markup.add(but4)
     bot.send_message(message.chat.id,"Выбери ниже",reply_markup=markup)
+    bot.register_next_step_handler(message,MathK)
 
+def MathK(message):
+    global firstNum, secondNum, znak
+    result = 0
+    if message.text == "+":
+        result = firstNum + secondNum
+        bot.send_message(message.chat.id,f"{firstNum} + {secondNum} = {result}")
+        button(message)
+    elif message.text == "-":
+        result = firstNum - secondNum
+        bot.send_message(message.chat.id,f"{firstNum} - {secondNum} = {result}")
+        button(message)
+    elif message.text == "/":
+        result = firstNum / secondNum
+        bot.send_message(message.chat.id,f"{firstNum} / {secondNum} = {result}")
+        button(message)
+    elif message.text == "*":
+        result = firstNum * secondNum
+        bot.send_message(message.chat.id,f"{firstNum} * {secondNum} = {result}")
+        button(message)
 
 bot.infinity_polling()
