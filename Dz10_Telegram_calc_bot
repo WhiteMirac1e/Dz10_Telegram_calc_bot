@@ -1,9 +1,14 @@
 import telebot
 from telebot import types
-bot = telebot.TeleBot("6026317343:AAEprQGw8IIfqJLrFiLnFwTfQi1bbycuNa4")
+import datetime
+import logging
+bot = telebot.TeleBot("")
 
 global firstNum
 global secondNum
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO,filename='bot.log')
+# logger = logging.getLogger()
 
 @bot.message_handler(commands=["start"])
 def button(message):
@@ -37,12 +42,6 @@ def sentenceK(message):
     firstNum = complex(numbers.split()[0])
     secondNum = complex(numbers.split()[1])
     bot.send_message(message.chat.id,f"Первое число : {firstNum}, Второе число : {secondNum}")
-    # a1 = int(firstNum.split("+", "-")[0])
-    # b1 = int(firstNum.split("+", "-")[1])
-    # a2 = int(secondNum.split("+", "-")[0])
-    # b2 = int(secondNum.split("+", "-")[1])
-    # bot.send_message(message.chat.id,f"Первое число : {a1}, Второе число : {b1}")
-    # bot.send_message(message.chat.id,f"Первое число : {a2}, Второе число : {b2}")
     buttonMathK(message)
 
 @bot.message_handler(commands = ["button"])
